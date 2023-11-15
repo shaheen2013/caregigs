@@ -26,12 +26,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get(
-    "SECRET_KEY", 'django-insecure-5+sj*+n7!w1mw4gx7t&4hurm#64-hco9%!x6$&ct90mk%7d)b^'  # noqa
+    "SECRET_KEY",
+    "django-insecure-5+sj*+n7!w1mw4gx7t&4hurm#64-hco9%!x6$&ct90mk%7d)b^",  # noqa
 )
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False")
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(',')
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 
 
 # Application definition
@@ -51,9 +52,14 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "debug_toolbar",
+    "rest_framework_swagger",
+    "rest_framework",
+    "djoser",
+    "drf_yasg",
+
     # Local
     "accounts",
-    "generals"
+    "generals",
 ]
 
 MIDDLEWARE = [
@@ -69,25 +75,25 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",  # django-allauth
 ]
 
-ROOT_URLCONF = 'CONFIG.urls'
+ROOT_URLCONF = "CONFIG.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [BASE_DIR / "templates"],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'CONFIG.wsgi.application'
+WSGI_APPLICATION = "CONFIG.wsgi.application"
 
 
 # Database
@@ -112,22 +118,28 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -147,12 +159,12 @@ USE_TZ = True
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-root
@@ -161,6 +173,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
 
 # https://whitenoise.readthedocs.io/en/latest/django.html
 STORAGES = {
@@ -171,6 +184,9 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = "media"
 
 # django-crispy-forms
 # https://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
@@ -205,7 +221,9 @@ AUTHENTICATION_BACKENDS = (
 
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_SESSION_REMEMBER = os.environ.get("A_SESSION_REMEMBER", True)
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = os.environ.get("A_SIGNUP_PW_ENTER_TWICE", True)  # noqa
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = os.environ.get(
+    "A_SIGNUP_PW_ENTER_TWICE", True
+)  # noqa
 ACCOUNT_USERNAME_REQUIRED = os.environ.get("A_USERNAME_REQUIRED", False)
 ACCOUNT_AUTHENTICATION_METHOD = os.environ.get("A_AUTH_METHOD", "email")
 ACCOUNT_EMAIL_REQUIRED = os.environ.get("A_EMAIL_REQUIRED", True)
@@ -219,3 +237,52 @@ EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 EMAIL_PORT = os.environ.get("EMAIL_PORT", 587)
 EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", True)
+
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": ["rest_framework.schemas.coreapi.AutoSchema"],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.SearchFilter",
+    ],
+    "DEFAULT_FILTERS": ["rest_framework.filters.OrderingFilter"],
+}
+
+
+DJOSER = {
+    # 'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    # 'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    # 'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    # 'SEND_ACTIVATION_EMAIL': True,
+    "SERIALIZERS": {
+        "user": "accounts.serializers.CustomUserSerializer",
+        'user_create': 'accounts.serializers.CustomUserSerializer',
+    },
+}
+
+
+SWAGGER_SETTINGS = {
+    "DEFAULT_INFO": {
+        "version": os.environ.get("CareGiGs", "1.0.0"),
+        "title": os.environ.get("CareGiGs Title", "CareGiGs Backend"),
+        "description": os.environ.get(
+            "CareGiGs Description", "This is the CareGiGS Project"
+        ),
+    },
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+        },
+    },
+    "PUBLIC": True,
+}
+
+
