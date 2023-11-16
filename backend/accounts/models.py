@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
 
-#App imports
+# App imports
 from .managers import UserManager
 
 
@@ -14,11 +14,10 @@ class BaseModel(models.Model):
         abstract = True
 
 
-class CustomUser(AbstractUser,BaseModel):
+class CustomUser(AbstractUser, BaseModel):
     username = models.CharField(max_length=128, null=True, unique=False, blank=True)
     email = models.EmailField(unique=True, blank=False)
     is_active = models.BooleanField(default=False)
-
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -27,6 +26,7 @@ class CustomUser(AbstractUser,BaseModel):
 
     def __str__(self):
         return self.email
-    
+
     class Meta:
         ordering = ("first_name",)
+

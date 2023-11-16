@@ -1,6 +1,7 @@
 from rest_framework import serializers
-
 from .models import CustomUser
+from accounts.models import CustomUser
+
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -9,8 +10,9 @@ class CustomUserSerializer(serializers.ModelSerializer):
         exclude = [
             "is_superuser",
             "is_staff",
-            "is_active",
             # "date_joined",
+            'groups', 
+            'user_permissions'
         ]
         extra_kwargs = {
             "password": {"write_only": True},

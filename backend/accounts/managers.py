@@ -2,7 +2,7 @@ from django.contrib.auth.models import BaseUserManager
 
 
 class UserManager(BaseUserManager):
-        
+
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError("The Email field must be set")
@@ -15,7 +15,6 @@ class UserManager(BaseUserManager):
         user.is_staff = False
         user.save(using=self._db)
         return user
-    
 
     def create_superuser(self, email, password=None, **extra_fields):
         if not email:
@@ -30,7 +29,6 @@ class UserManager(BaseUserManager):
         user.is_active = True
         user.save(using=self._db)
         return user
-    
 
     def create_staffuser(self, email, password=None, **extra_fields):
         if not email:
