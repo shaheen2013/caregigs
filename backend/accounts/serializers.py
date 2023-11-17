@@ -12,7 +12,9 @@ class CustomUserSerializer(serializers.ModelSerializer):
             "is_staff",
             # "date_joined",
             'groups', 
-            'user_permissions'
+            'user_permissions',
+            'created_date',
+            'updated_date'
         ]
         extra_kwargs = {
             "password": {"write_only": True},

@@ -37,6 +37,7 @@ class Candidate(BaseModel):
     country = models.CharField(max_length=64)
     skills = models.TextField()
     cv = models.FileField(upload_to='cv')
+    cv_identifier = models.CharField(max_length=64,blank=True,null=True)
     police_report = models.FileField(upload_to='police_report')
     vulnerable_sector = models.FileField(upload_to='police_report')
     training_document = models.FileField(upload_to='training_report')
@@ -56,18 +57,18 @@ class Candidate(BaseModel):
 
 
 class Education(BaseModel):
-    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, related_name="educations")
     name = models.CharField(max_length=256)
     qualification = models.CharField(max_length=256)
-    date_completed = models.DateField(blank=True)
+    date_completed = models.DateField(blank=True,null=True)
 
     def __str__(self):
         return f"{self.candidate.full_name}/{self.name}"
 
 
 class Referee(BaseModel):
-    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-    Name = models.CharField(max_length=128)
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, related_name="referees")
+    name = models.CharField(max_length=128)
     title = models.CharField(max_length=128)
     company = models.CharField(max_length=128)
     contact_number = models.CharField(max_length=15, blank=True, null=True)
