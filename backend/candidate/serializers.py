@@ -1,7 +1,12 @@
 from rest_framework import serializers
+
+
 from accounts.serializers import CustomUserSerializer
 from .models import Candidate,Education,Referee
 from accounts.models import CustomUser
+from .helpers import upload_resume_to_affinda
+
+
 
 
 
@@ -74,8 +79,6 @@ class CandidateSerializer(serializers.ModelSerializer):
         referees = validated_data.pop('referees', [])
 
         candidate = Candidate.objects.create(**validated_data)
-
-        print(candidate)
         
         for education in educations:
             education['candidate'] = candidate.id
@@ -88,6 +91,10 @@ class CandidateSerializer(serializers.ModelSerializer):
             referee_serializer = RefereeSerializer(data = referee)
             referee_serializer.is_valid(raise_exception=True)
             referee_serializer.save()
+        
+        cv_identifier = upload_resume_to_affinda(candidate.cv.path)
+        candidate.cv_identifier = cv_identifier
+        candidate.save()
 
 
         return candidate
