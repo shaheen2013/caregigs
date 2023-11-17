@@ -39,7 +39,7 @@ class Candidate(BaseModel):
     cv = models.FileField(upload_to='cv')
     cv_identifier = models.CharField(max_length=64,blank=True,null=True)
     police_report = models.FileField(upload_to='police_report')
-    vulnerable_sector = models.FileField(upload_to='police_report')
+    vulnerable_sector = models.FileField(upload_to='valnerable_sector_report')
     training_document = models.FileField(upload_to='training_report')
     health_report = models.FileField(upload_to='health_report')
     job_type = models.CharField(max_length=1, choices=JOB_TYPE)
